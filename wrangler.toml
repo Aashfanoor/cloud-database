@@ -1,12 +1,13 @@
 name = "cloudflaredb-pages"
 main = "worker.js"
-compatibility_date = "2026-05-20"
+compatibility_date = "2025-01-01"
 
-[[durable_objects]]
-bindings = [
-  { name = "MY_DATABASE", class_name = "MyDatabase" }
-]
+# Durable Objects configuration
+[[durable_objects.bindings]]
+name = "MY_DATABASE"
+class_name = "MyDatabase"
 
+# Database migrations
 [[migrations]]
 tag = "v1"
 new_classes = ["MyDatabase"]
