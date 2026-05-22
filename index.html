@@ -1,25 +1,23 @@
-// worker.js - Complete working version
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    
-    // Serve HTML page for root path
-    if (url.pathname === "/" || url.pathname === "/index.html") {
-      const html = `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cloudflare Database Demo</title>
   <style>
-    /* Add all the CSS from above here */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       padding: 20px;
     }
+    
     .container {
       max-width: 800px;
       margin: 0 auto;
@@ -27,19 +25,66 @@ export default {
       border-radius: 20px;
       padding: 40px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: slideIn 0.5s ease-out;
     }
-    h1 { color: #333; margin-bottom: 10px; }
-    h2 { color: #555; margin: 30px 0 15px 0; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
-    .form-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+    
+    h2 {
+      color: #555;
+      margin: 30px 0 15px 0;
+      font-size: 22px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+    }
+    
     input {
       width: 100%;
       padding: 12px;
       border: 2px solid #e0e0e0;
       border-radius: 10px;
       font-size: 16px;
+      transition: all 0.3s;
     }
-    input:focus { outline: none; border-color: #667eea; }
+    
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
     button {
       width: 100%;
       padding: 14px;
@@ -50,29 +95,114 @@ export default {
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    button:hover { transform: translateY(-2px); }
-    .records-list { list-style: none; margin-top: 20px; }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .records-list {
+      list-style: none;
+      margin-top: 20px;
+    }
+    
     .record-item {
       background: #f8f9fa;
       border-left: 4px solid #667eea;
       padding: 15px;
       margin-bottom: 10px;
       border-radius: 8px;
+      transition: transform 0.2s;
+      animation: fadeIn 0.3s;
     }
-    .record-name { font-weight: bold; color: #667eea; }
-    .record-email { color: #666; margin-top: 5px; }
-    .record-time { color: #999; margin-top: 5px; font-size: 12px; }
-    .empty-state { text-align: center; padding: 40px; color: #999; background: #f8f9fa; border-radius: 10px; }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .record-item:hover {
+      transform: translateX(5px);
+      background: #f0f0f0;
+    }
+    
+    .record-name {
+      font-weight: bold;
+      color: #667eea;
+      font-size: 16px;
+    }
+    
+    .record-email {
+      color: #666;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    
+    .record-time {
+      color: #999;
+      margin-top: 5px;
+      font-size: 12px;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+    
     .status {
       margin-top: 20px;
       padding: 10px;
       border-radius: 8px;
       display: none;
+      animation: slideDown 0.3s;
     }
-    .status.success { background: #d4edda; color: #155724; display: block; }
-    .status.error { background: #f8d7da; color: #721c24; display: block; }
-    .loading { text-align: center; padding: 20px; display: none; }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      display: block;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      display: block;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+    
     .spinner {
       border: 3px solid #f3f3f3;
       border-top: 3px solid #667eea;
@@ -82,10 +212,12 @@ export default {
       animation: spin 1s linear infinite;
       margin: 0 auto;
     }
+    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    
     .refresh-btn {
       background: #28a745;
       margin-top: 10px;
@@ -93,7 +225,16 @@ export default {
       padding: 8px 20px;
       float: right;
     }
-    .clearfix::after { content: ""; clear: both; display: table; }
+    
+    .refresh-btn:hover {
+      background: #218838;
+    }
+    
+    .clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
   </style>
 </head>
 <body>
@@ -102,19 +243,21 @@ export default {
     <p class="subtitle">Store and retrieve data in persistent storage</p>
     
     <div class="form-group">
-      <label>👤 Name *</label>
+      <label for="name">👤 Name *</label>
       <input type="text" id="name" placeholder="Enter your name" />
     </div>
     
     <div class="form-group">
-      <label>📧 Email *</label>
+      <label for="email">📧 Email *</label>
       <input type="email" id="email" placeholder="Enter your email" />
     </div>
     
     <button onclick="addRecord()">💾 Add Record to Database</button>
     
     <div id="status" class="status"></div>
-    <div id="loading" class="loading"><div class="spinner"></div></div>
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+    </div>
     
     <div class="clearfix">
       <h2 style="float: left;">📋 Stored Records</h2>
@@ -125,6 +268,9 @@ export default {
   </div>
 
   <script>
+    // Use the same origin (your worker URL)
+    const BASE_URL = '';
+    
     async function addRecord() {
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
@@ -134,26 +280,39 @@ export default {
         return;
       }
       
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showStatus("Please enter a valid email address.", "error");
+        return;
+      }
+      
       showLoading(true);
       
       try {
         const response = await fetch('/add', {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({ name, email })
         });
         
+        const responseText = await response.text();
+        
         if (response.ok) {
+          // Clear form
           document.getElementById("name").value = "";
           document.getElementById("email").value = "";
           showStatus("✅ Record added successfully!", "success");
+          // Reload records to show the new one
           await loadRecords();
         } else {
-          const error = await response.text();
-          showStatus("❌ Failed: " + error, "error");
+          showStatus("❌ Failed to add record: " + responseText, "error");
         }
       } catch (error) {
-        showStatus("❌ Error: " + error.message, "error");
+        console.error("Error adding record:", error);
+        showStatus("❌ Network error: " + error.message, "error");
       } finally {
         showLoading(false);
       }
@@ -161,29 +320,40 @@ export default {
     
     async function loadRecords() {
       showLoading(true);
+      
       try {
+        console.log("Fetching records from /list...");
         const response = await fetch('/list');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
         const records = await response.json();
+        console.log("Records received:", records);
+        
         const container = document.getElementById("recordsContainer");
         
         if (!records || records.length === 0) {
-          container.innerHTML = '<div class="empty-state">📭 No records found. Add your first record!</div>';
+          container.innerHTML = '<div class="empty-state">📭 No records found. Add your first record above!</div>';
         } else {
-          container.innerHTML = \`
+          container.innerHTML = `
             <div class="records-list">
-              \${records.map(record => \`
+              ${records.map((record, index) => `
                 <div class="record-item">
-                  <div class="record-name">👤 \${escapeHtml(record.name)}</div>
-                  <div class="record-email">📧 \${escapeHtml(record.email)}</div>
-                  <div class="record-time">🕒 \${record.timestamp || new Date().toLocaleString()}</div>
+                  <div class="record-name">👤 ${escapeHtml(record.name)}</div>
+                  <div class="record-email">📧 ${escapeHtml(record.email)}</div>
+                  <div class="record-time">🕒 ${record.timestamp || new Date().toLocaleString()}</div>
                 </div>
-              \`).join('')}
+              `).join('')}
             </div>
-          \`;
+          `;
         }
       } catch (error) {
+        console.error("Error loading records:", error);
         document.getElementById("recordsContainer").innerHTML = 
-          '<div class="empty-state">❌ Failed to load records</div>';
+          '<div class="empty-state">❌ Failed to load records: ' + escapeHtml(error.message) + '<br><br>Check console for details</div>';
+        showStatus("Failed to load records: " + error.message, "error");
       } finally {
         showLoading(false);
       }
@@ -192,77 +362,56 @@ export default {
     function showStatus(message, type) {
       const statusDiv = document.getElementById("status");
       statusDiv.textContent = message;
-      statusDiv.className = \`status \${type}\`;
+      statusDiv.className = `status ${type}`;
+      
+      // Auto hide after 3 seconds
       setTimeout(() => {
-        statusDiv.className = "status";
+        if (statusDiv.className.includes(type)) {
+          statusDiv.style.display = "none";
+          setTimeout(() => {
+            statusDiv.className = "status";
+          }, 100);
+        }
       }, 3000);
     }
     
     function showLoading(show) {
-      document.getElementById("loading").style.display = show ? "block" : "none";
+      const loadingDiv = document.getElementById("loading");
+      loadingDiv.style.display = show ? "block" : "none";
     }
     
     function escapeHtml(text) {
+      if (!text) return '';
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
     }
     
-    loadRecords();
+    // Load records when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRecords();
+      
+      // Add enter key support
+      const emailInput = document.getElementById("email");
+      if (emailInput) {
+        emailInput.addEventListener("keypress", function(e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            addRecord();
+          }
+        });
+      }
+      
+      const nameInput = document.getElementById("name");
+      if (nameInput) {
+        nameInput.addEventListener("keypress", function(e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            document.getElementById("email").focus();
+          }
+        });
+      }
+    });
   </script>
 </body>
-</html>`;
-      
-      return new Response(html, {
-        headers: { "Content-Type": "text/html" }
-      });
-    }
-    
-    // Handle API routes with Durable Object
-    if (url.pathname === "/add" || url.pathname === "/list") {
-      const id = env.MY_DATABASE.idFromName("main");
-      const obj = env.MY_DATABASE.get(id);
-      return obj.fetch(request);
-    }
-    
-    return new Response("Not found", { status: 404 });
-  }
-}
-
-export class MyDatabase {
-  constructor(state, env) {
-    this.storage = state.storage;
-  }
-
-  async fetch(request) {
-    const url = new URL(request.url);
-    
-    if (url.pathname === "/add" && request.method === "POST") {
-      try {
-        const { name, email } = await request.json();
-        
-        if (!name || !email) {
-          return new Response("Name and email are required", { status: 400 });
-        }
-        
-        const timestamp = new Date().toISOString();
-        await this.storage.put(name, { name, email, timestamp });
-        
-        return new Response("Added successfully", { status: 200 });
-      } catch (error) {
-        return new Response(`Error: ${error.message}`, { status: 500 });
-      }
-    }
-    
-    if (url.pathname === "/list" && request.method === "GET") {
-      const entries = await this.storage.list();
-      const records = Array.from(entries.values());
-      return new Response(JSON.stringify(records), {
-        headers: { "Content-Type": "application/json" },
-        status: 200
-      });
-    }
-    
-    return new Response("Not found", { status: 404 });
-  }
-}
+</html>
