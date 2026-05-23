@@ -232,25 +232,19 @@ function getHTML() {
       font-weight: 500;
     }
     
-    input, textarea {
+    input {
       width: 100%;
       padding: 12px;
       border: 2px solid #e0e0e0;
       border-radius: 10px;
       font-size: 16px;
       transition: all 0.3s;
-      font-family: inherit;
     }
     
-    input:focus, textarea:focus {
+    input:focus {
       outline: none;
       border-color: #667eea;
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    
-    textarea {
-      resize: vertical;
-      min-height: 100px;
     }
     
     button {
@@ -417,12 +411,6 @@ function getHTML() {
       text-align: center;
       color: #0066cc;
       font-weight: 600;
-    }
-    
-    .clearfix::after {
-      content: "";
-      clear: both;
-      display: table;
     }
     
     /* Scrollbar styling */
