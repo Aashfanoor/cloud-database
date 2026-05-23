@@ -1,4 +1,4 @@
-name = "cloudflaredb-pages"
+name = "cloud-database1"
 main = "worker.js"
 compatibility_date = "2025-01-01"
 
@@ -7,7 +7,7 @@ compatibility_date = "2025-01-01"
 name = "MY_DATABASE"
 class_name = "MyDatabase"
 
-# Database migrations
+# Correct syntax for free plan
 [[migrations]]
 tag = "v1"
-new_classes = ["MyDatabase"]
+new_sqlite_classes = ["MyDatabase"]
